@@ -1,0 +1,587 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4A4A761E26D49A81003A9A41 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4A761D26D49A81003A9A41 /* AppDelegate.swift */; };
+		4A4A762026D49A81003A9A41 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4A761F26D49A81003A9A41 /* ViewController.swift */; };
+		4A4A762226D49A82003A9A41 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A4A762126D49A82003A9A41 /* Assets.xcassets */; };
+		4A4A762526D49A82003A9A41 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4A4A762326D49A82003A9A41 /* Main.storyboard */; };
+		4A4A763126D49A82003A9A41 /* CouturierTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4A763026D49A82003A9A41 /* CouturierTests.swift */; };
+		4A4A763C26D49A83003A9A41 /* CouturierUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4A763B26D49A83003A9A41 /* CouturierUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4A4A762D26D49A82003A9A41 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4A4A761226D49A81003A9A41 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4A4A761926D49A81003A9A41;
+			remoteInfo = Couturier;
+		};
+		4A4A763826D49A83003A9A41 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4A4A761226D49A81003A9A41 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4A4A761926D49A81003A9A41;
+			remoteInfo = Couturier;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		4A4A761A26D49A81003A9A41 /* Couturier.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Couturier.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4A4A761D26D49A81003A9A41 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		4A4A761F26D49A81003A9A41 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		4A4A762126D49A82003A9A41 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4A4A762426D49A82003A9A41 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		4A4A762626D49A82003A9A41 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4A4A762726D49A82003A9A41 /* Couturier.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Couturier.entitlements; sourceTree = "<group>"; };
+		4A4A762C26D49A82003A9A41 /* CouturierTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CouturierTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4A4A763026D49A82003A9A41 /* CouturierTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CouturierTests.swift; sourceTree = "<group>"; };
+		4A4A763226D49A82003A9A41 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4A4A763726D49A83003A9A41 /* CouturierUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CouturierUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4A4A763B26D49A83003A9A41 /* CouturierUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CouturierUITests.swift; sourceTree = "<group>"; };
+		4A4A763D26D49A83003A9A41 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4A4A761726D49A81003A9A41 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4A4A762926D49A82003A9A41 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4A4A763426D49A83003A9A41 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4A4A761126D49A81003A9A41 = {
+			isa = PBXGroup;
+			children = (
+				4A4A761C26D49A81003A9A41 /* Couturier */,
+				4A4A762F26D49A82003A9A41 /* CouturierTests */,
+				4A4A763A26D49A83003A9A41 /* CouturierUITests */,
+				4A4A761B26D49A81003A9A41 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4A4A761B26D49A81003A9A41 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4A4A761A26D49A81003A9A41 /* Couturier.app */,
+				4A4A762C26D49A82003A9A41 /* CouturierTests.xctest */,
+				4A4A763726D49A83003A9A41 /* CouturierUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4A4A761C26D49A81003A9A41 /* Couturier */ = {
+			isa = PBXGroup;
+			children = (
+				4A4A761D26D49A81003A9A41 /* AppDelegate.swift */,
+				4A4A761F26D49A81003A9A41 /* ViewController.swift */,
+				4A4A762126D49A82003A9A41 /* Assets.xcassets */,
+				4A4A762326D49A82003A9A41 /* Main.storyboard */,
+				4A4A762626D49A82003A9A41 /* Info.plist */,
+				4A4A762726D49A82003A9A41 /* Couturier.entitlements */,
+			);
+			path = Couturier;
+			sourceTree = "<group>";
+		};
+		4A4A762F26D49A82003A9A41 /* CouturierTests */ = {
+			isa = PBXGroup;
+			children = (
+				4A4A763026D49A82003A9A41 /* CouturierTests.swift */,
+				4A4A763226D49A82003A9A41 /* Info.plist */,
+			);
+			path = CouturierTests;
+			sourceTree = "<group>";
+		};
+		4A4A763A26D49A83003A9A41 /* CouturierUITests */ = {
+			isa = PBXGroup;
+			children = (
+				4A4A763B26D49A83003A9A41 /* CouturierUITests.swift */,
+				4A4A763D26D49A83003A9A41 /* Info.plist */,
+			);
+			path = CouturierUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4A4A761926D49A81003A9A41 /* Couturier */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4A4A764026D49A83003A9A41 /* Build configuration list for PBXNativeTarget "Couturier" */;
+			buildPhases = (
+				4A4A761626D49A81003A9A41 /* Sources */,
+				4A4A761726D49A81003A9A41 /* Frameworks */,
+				4A4A761826D49A81003A9A41 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Couturier;
+			productName = Couturier;
+			productReference = 4A4A761A26D49A81003A9A41 /* Couturier.app */;
+			productType = "com.apple.product-type.application";
+		};
+		4A4A762B26D49A82003A9A41 /* CouturierTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4A4A764326D49A83003A9A41 /* Build configuration list for PBXNativeTarget "CouturierTests" */;
+			buildPhases = (
+				4A4A762826D49A82003A9A41 /* Sources */,
+				4A4A762926D49A82003A9A41 /* Frameworks */,
+				4A4A762A26D49A82003A9A41 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4A4A762E26D49A82003A9A41 /* PBXTargetDependency */,
+			);
+			name = CouturierTests;
+			productName = CouturierTests;
+			productReference = 4A4A762C26D49A82003A9A41 /* CouturierTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		4A4A763626D49A83003A9A41 /* CouturierUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4A4A764626D49A83003A9A41 /* Build configuration list for PBXNativeTarget "CouturierUITests" */;
+			buildPhases = (
+				4A4A763326D49A83003A9A41 /* Sources */,
+				4A4A763426D49A83003A9A41 /* Frameworks */,
+				4A4A763526D49A83003A9A41 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4A4A763926D49A83003A9A41 /* PBXTargetDependency */,
+			);
+			name = CouturierUITests;
+			productName = CouturierUITests;
+			productReference = 4A4A763726D49A83003A9A41 /* CouturierUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4A4A761226D49A81003A9A41 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1250;
+				LastUpgradeCheck = 1250;
+				TargetAttributes = {
+					4A4A761926D49A81003A9A41 = {
+						CreatedOnToolsVersion = 12.5.1;
+					};
+					4A4A762B26D49A82003A9A41 = {
+						CreatedOnToolsVersion = 12.5.1;
+						TestTargetID = 4A4A761926D49A81003A9A41;
+					};
+					4A4A763626D49A83003A9A41 = {
+						CreatedOnToolsVersion = 12.5.1;
+						TestTargetID = 4A4A761926D49A81003A9A41;
+					};
+				};
+			};
+			buildConfigurationList = 4A4A761526D49A81003A9A41 /* Build configuration list for PBXProject "Couturier" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 4A4A761126D49A81003A9A41;
+			productRefGroup = 4A4A761B26D49A81003A9A41 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4A4A761926D49A81003A9A41 /* Couturier */,
+				4A4A762B26D49A82003A9A41 /* CouturierTests */,
+				4A4A763626D49A83003A9A41 /* CouturierUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4A4A761826D49A81003A9A41 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A4A762226D49A82003A9A41 /* Assets.xcassets in Resources */,
+				4A4A762526D49A82003A9A41 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4A4A762A26D49A82003A9A41 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4A4A763526D49A83003A9A41 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4A4A761626D49A81003A9A41 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A4A762026D49A81003A9A41 /* ViewController.swift in Sources */,
+				4A4A761E26D49A81003A9A41 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4A4A762826D49A82003A9A41 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A4A763126D49A82003A9A41 /* CouturierTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4A4A763326D49A83003A9A41 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A4A763C26D49A83003A9A41 /* CouturierUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4A4A762E26D49A82003A9A41 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4A4A761926D49A81003A9A41 /* Couturier */;
+			targetProxy = 4A4A762D26D49A82003A9A41 /* PBXContainerItemProxy */;
+		};
+		4A4A763926D49A83003A9A41 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4A4A761926D49A81003A9A41 /* Couturier */;
+			targetProxy = 4A4A763826D49A83003A9A41 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		4A4A762326D49A82003A9A41 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4A4A762426D49A82003A9A41 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		4A4A763E26D49A83003A9A41 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		4A4A763F26D49A83003A9A41 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		4A4A764126D49A83003A9A41 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Couturier/Couturier.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 7MQAR4D6M8;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = Couturier/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = me.sar.Couturier;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		4A4A764226D49A83003A9A41 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Couturier/Couturier.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 7MQAR4D6M8;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = Couturier/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = me.sar.Couturier;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		4A4A764426D49A83003A9A41 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 7MQAR4D6M8;
+				INFOPLIST_FILE = CouturierTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
+				PRODUCT_BUNDLE_IDENTIFIER = me.sar.CouturierTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Couturier.app/Contents/MacOS/Couturier";
+			};
+			name = Debug;
+		};
+		4A4A764526D49A83003A9A41 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 7MQAR4D6M8;
+				INFOPLIST_FILE = CouturierTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
+				PRODUCT_BUNDLE_IDENTIFIER = me.sar.CouturierTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Couturier.app/Contents/MacOS/Couturier";
+			};
+			name = Release;
+		};
+		4A4A764726D49A83003A9A41 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 7MQAR4D6M8;
+				INFOPLIST_FILE = CouturierUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = me.sar.CouturierUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Couturier;
+			};
+			name = Debug;
+		};
+		4A4A764826D49A83003A9A41 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 7MQAR4D6M8;
+				INFOPLIST_FILE = CouturierUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = me.sar.CouturierUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Couturier;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4A4A761526D49A81003A9A41 /* Build configuration list for PBXProject "Couturier" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A4A763E26D49A83003A9A41 /* Debug */,
+				4A4A763F26D49A83003A9A41 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4A4A764026D49A83003A9A41 /* Build configuration list for PBXNativeTarget "Couturier" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A4A764126D49A83003A9A41 /* Debug */,
+				4A4A764226D49A83003A9A41 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4A4A764326D49A83003A9A41 /* Build configuration list for PBXNativeTarget "CouturierTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A4A764426D49A83003A9A41 /* Debug */,
+				4A4A764526D49A83003A9A41 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4A4A764626D49A83003A9A41 /* Build configuration list for PBXNativeTarget "CouturierUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A4A764726D49A83003A9A41 /* Debug */,
+				4A4A764826D49A83003A9A41 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4A4A761226D49A81003A9A41 /* Project object */;
+}
