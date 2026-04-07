@@ -526,26 +526,27 @@ input[type="color"].color-swatch:disabled {
     pointer-events: none;
 }
 
-/* ── Color swatch grid (sidebar rows) ────────────────────── */
+/* ── Color theme rows (sidebar) ──────────────────────────── */
 
-.clr-swatch-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    gap: 2px;
-    width: 42px;
-    height: 42px;
-    flex-shrink: 0;
-    border: 1px solid var(--aa-border);
-    border-radius: 4px;
-    overflow: hidden;
-    background: var(--aa-bg);
-    padding: 3px;
-    box-sizing: border-box;
+.color-theme-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    padding: 8px 10px;
 }
 
-.clr-swatch-cell {
-    border-radius: 1px;
+/* strip of small colour squares */
+.clr-strip {
+    display: flex;
+    gap: 2px;
+}
+
+.clr-strip-cell {
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    flex-shrink: 0;
+    border: 1px solid var(--aa-border);
 }
 
 /* ── Color preview ───────────────────────────────────────── */

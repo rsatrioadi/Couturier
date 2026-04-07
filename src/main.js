@@ -234,12 +234,28 @@ function setAppEnabled(on) {
   document.getElementById('colorAddBtn').disabled = !on;
 }
 
+// Map of font family name (lowercase) -> {path, index} for Office-private fonts.
+// Populated once by loadFontsAsync; used by ensureFontLoaded() on demand.
+const extraFontMap = new Map();   // key: family.toLowerCase()
+const loadedFonts  = new Set();   // families whose @font-face is already injected
+
 async function loadFontsAsync() {
   try {
-    const fonts = await invoke('list_fonts');
+    const [fonts, extras] = await Promise.all([
+      invoke('list_fonts'),
+      invoke('list_extra_font_faces'),
+    ]);
+
+    // Build the lookup map
+    extras.forEach(e => {
+      extraFontMap.set(e.family.toLowerCase(), e);
+    });
+
+    // Merge into datalist (deduplicated)
+    const allFamilies = new Set([...fonts, ...extras.map(e => e.family)]);
     const dl   = document.getElementById('fontList');
     const frag = document.createDocumentFragment();
-    fonts.forEach(f => {
+    allFamilies.forEach(f => {
       const opt = document.createElement('option');
       opt.value = f;
       frag.appendChild(opt);
@@ -247,6 +263,32 @@ async function loadFontsAsync() {
     dl.appendChild(frag);
   } catch (e) {
     console.warn('Font enumeration failed:', e);
+  }
+}
+
+/**
+ * If `family` is an Office-private font that hasn't been injected yet,
+ * fetch its bytes from Rust as base64 and create a data: @font-face rule.
+ * Returns when the font is ready (or immediately if already loaded / not extra).
+ */
+async function ensureFontLoaded(family) {
+  if (!family) return;
+  const key = family.toLowerCase();
+  if (loadedFonts.has(key)) return;
+  const entry = extraFontMap.get(key);
+  if (!entry) return;  // system font — no action needed
+
+  try {
+    const b64 = await invoke('get_font_data_b64', { path: entry.path });
+    if (!b64) return;
+    const mime = entry.path.toLowerCase().endsWith('.otf') ? 'font/otf' : 'font/truetype';
+    const rule = `@font-face { font-family: ${JSON.stringify(family)}; src: url("data:${mime};base64,${b64}"); }`;
+    const style = document.createElement('style');
+    style.textContent = rule;
+    document.head.appendChild(style);
+    loadedFonts.add(key);
+  } catch (e) {
+    console.warn('Could not load font data for', family, e);
   }
 }
 
@@ -275,11 +317,18 @@ function makeRow(theme, i) {
   aaBox.className = 'aa-box';
   const aaUpper = document.createElement('span');
   aaUpper.textContent = 'A';
-  aaUpper.style.fontFamily = theme.heading_font || 'inherit';
   const aaLower = document.createElement('span');
   aaLower.textContent = 'a';
-  aaLower.style.fontFamily = theme.body_font || 'inherit';
   aaBox.append(aaUpper, aaLower);
+
+  // Load Office-private fonts asynchronously then apply family names
+  Promise.all([
+    ensureFontLoaded(theme.heading_font),
+    ensureFontLoaded(theme.body_font),
+  ]).then(() => {
+    aaUpper.style.fontFamily = theme.heading_font || 'inherit';
+    aaLower.style.fontFamily = theme.body_font    || 'inherit';
+  });
 
   const info = document.createElement('div');
   info.className = 'theme-info';
@@ -334,7 +383,9 @@ function setDetailEnabled(on) {
   }
 }
 
-function updateSample(heading, body) {
+async function updateSample(heading, body) {
+  // Ensure Office-private fonts are loaded before setting font-family
+  await Promise.all([ensureFontLoaded(heading), ensureFontLoaded(body)]);
   document.getElementById('sampleHeading').style.fontFamily = heading || 'inherit';
   document.getElementById('sampleBody').style.fontFamily    = body    || 'inherit';
 }
@@ -476,40 +527,26 @@ function renderColorList() {
   colorThemes.forEach((t, i) => list.appendChild(makeColorRow(t, i)));
 }
 
-/** 8-color swatch grid showing dk2, lt2, accent1-6 */
-function makeSwatchGrid(theme) {
-  const grid = document.createElement('div');
-  grid.className = 'clr-swatch-grid';
-  const keys = ['dk2','lt2','accent1','accent2','accent3','accent4','accent5','accent6'];
-  keys.forEach(k => {
-    const cell = document.createElement('div');
-    cell.className = 'clr-swatch-cell';
-    cell.style.background = '#' + theme[k];
-    grid.appendChild(cell);
-  });
-  return grid;
-}
-
 function makeColorRow(theme, i) {
   const row = document.createElement('div');
-  row.className = 'theme-row' + (i === colorSelectedIndex ? ' sel' : '');
-
-  const grid = makeSwatchGrid(theme);
-
-  const info = document.createElement('div');
-  info.className = 'theme-info';
+  row.className = 'theme-row color-theme-row' + (i === colorSelectedIndex ? ' sel' : '');
 
   const name = document.createElement('div');
   name.className = 'theme-name';
   name.textContent = theme.name;
 
-  // Show the 6 accent hex values as a subtitle
-  const sub = document.createElement('div');
-  sub.className = 'theme-sub';
-  sub.textContent = [theme.accent1, theme.accent2, theme.accent3].map(h => '#' + h).join('  ');
+  // A single strip of 8 color squares: dk1, lt1, dk2, lt2, accent1-4
+  const strip = document.createElement('div');
+  strip.className = 'clr-strip';
+  const keys = ['dk1','lt1','dk2','lt2','accent1','accent2','accent3','accent4','accent5','accent6'];
+  keys.forEach(k => {
+    const cell = document.createElement('div');
+    cell.className = 'clr-strip-cell';
+    cell.style.background = '#' + theme[k];
+    strip.appendChild(cell);
+  });
 
-  info.append(name, sub);
-  row.append(grid, info);
+  row.append(name, strip);
   row.addEventListener('click', () => selectColor(i));
   return row;
 }

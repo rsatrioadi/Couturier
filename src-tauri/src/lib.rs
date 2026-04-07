@@ -474,6 +474,76 @@ fn list_fonts() -> Vec<String> {
     families.into_iter().collect()
 }
 
+/// Directories where Microsoft Office stores its private fonts on macOS.
+const OFFICE_FONT_DIRS: &[&str] = &[
+    "/Applications/Microsoft Word.app/Contents/Resources/DFonts",
+    "/Applications/Microsoft Excel.app/Contents/Resources/DFonts",
+    "/Applications/Microsoft PowerPoint.app/Contents/Resources/DFonts",
+];
+
+/// Returns `{family, path, index}` records for fonts in Office-private dirs.
+/// The frontend uses this for the datalist and for on-demand font loading.
+#[tauri::command]
+fn list_extra_font_faces() -> Vec<serde_json::Value> {
+    let mut out: Vec<serde_json::Value> = Vec::new();
+    let mut seen_paths: std::collections::HashSet<String> = std::collections::HashSet::new();
+
+    for dir in OFFICE_FONT_DIRS {
+        let Ok(entries) = std::fs::read_dir(dir) else { continue };
+        for entry in entries.flatten() {
+            let path = entry.path();
+            let ext = path.extension()
+                .and_then(|e| e.to_str())
+                .map(|e| e.to_lowercase())
+                .unwrap_or_default();
+            if !matches!(ext.as_str(), "ttf" | "otf" | "ttc") { continue }
+            let path_str = path.to_string_lossy().into_owned();
+            if !seen_paths.insert(path_str.clone()) { continue }
+
+            let Ok(data) = std::fs::read(&path) else { continue };
+            let count = if ext == "ttc" {
+                ttf_parser::fonts_in_collection(&data).unwrap_or(1)
+            } else { 1 };
+            for i in 0..count {
+                if let Some(family) = family_name_from_data(&data, i) {
+                    out.push(serde_json::json!({
+                        "family": family,
+                        "path": path_str,
+                        "index": i,
+                    }));
+                }
+            }
+        }
+    }
+    out
+}
+
+/// Read a font file and return its bytes as a base64 string so the frontend
+/// can construct a `data:` URI for an `@font-face` rule.  This sidesteps
+/// WKWebView's block on `file://` URLs from `tauri://localhost` origin.
+#[tauri::command]
+fn get_font_data_b64(path: String) -> Option<String> {
+    let data = std::fs::read(&path).ok()?;
+    // Simple base64 encoding without an extra crate
+    Some(base64_encode(&data))
+}
+
+fn base64_encode(data: &[u8]) -> String {
+    const CHARS: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    let mut out = String::with_capacity((data.len() + 2) / 3 * 4);
+    for chunk in data.chunks(3) {
+        let b0 = chunk[0] as u32;
+        let b1 = if chunk.len() > 1 { chunk[1] as u32 } else { 0 };
+        let b2 = if chunk.len() > 2 { chunk[2] as u32 } else { 0 };
+        let n = (b0 << 16) | (b1 << 8) | b2;
+        out.push(CHARS[((n >> 18) & 63) as usize] as char);
+        out.push(CHARS[((n >> 12) & 63) as usize] as char);
+        out.push(if chunk.len() > 1 { CHARS[((n >> 6) & 63) as usize] as char } else { '=' });
+        out.push(if chunk.len() > 2 { CHARS[(n & 63) as usize] as char } else { '=' });
+    }
+    out
+}
+
 // ---------------------------------------------------------------------------
 // Theme CRUD commands — all take `folder` (full path to e.g. "Theme Fonts")
 // ---------------------------------------------------------------------------
@@ -558,6 +628,8 @@ pub fn run() {
             pick_themes_folder,
             resolve_theme_subfolder,
             list_fonts,
+            list_extra_font_faces,
+            get_font_data_b64,
             load_themes,
             save_theme,
             delete_theme,
