@@ -11,11 +11,14 @@
     "windows": [
       {
         "title": "Couturier",
-        "width": 620,
-        "height": 420,
-        "minWidth": 520,
-        "minHeight": 360,
-        "resizable": true
+        "width": 640,
+        "height": 460,
+        "minWidth": 640,
+        "minHeight": 460,
+        "resizable": true,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true,
+        "trafficLightPosition": { "x": 9, "y": 15 }
       }
     ],
     "security": {

@@ -106,6 +106,12 @@ body {
     min-height: 0;
 }
 
+/* Explicit rule needed: CSS `display: flex` above overrides the UA-stylesheet
+   `display: none` that the HTML `hidden` attribute normally implies. */
+.app[hidden] {
+    display: none;
+}
+
 /* ── Sidebar ─────────────────────────────────────────────── */
 
 .sidebar {
@@ -420,4 +426,188 @@ input[type="text"]:disabled {
 .variant-pill:disabled {
     opacity: 0.35;
     pointer-events: none;
+}
+
+/* ── Title bar (overlay mode — sits under macOS traffic lights) */
+
+.titlebar {
+    height: 36px; /* tall enough to feel like a real title bar  */
+    flex-shrink: 0;
+    background: var(--toolbar-bg);
+    border-bottom: 1px solid var(--divider);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-app-region: drag; /* entire bar is draggable …                */
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* ── Tab bar (centred inside the title bar) ─────────────── */
+
+.tab-bar {
+    display: flex;
+    /* No -webkit-app-region here: let the parent's drag region show through
+       the gaps around the buttons, so all empty title-bar space is draggable. */
+}
+
+.tab-btn {
+    padding: 2px 18px;
+    border: 1px solid var(--input-border);
+    background: transparent;
+    color: var(--text-2);
+    font-size: 12px;
+    font-family: inherit;
+    cursor: default;
+    line-height: 1.6;
+    -webkit-app-region: no-drag; /* … except the actual buttons              */
+}
+.tab-btn:first-child {
+    border-radius: 5px 0 0 5px;
+}
+.tab-btn:last-child {
+    border-radius: 0 5px 5px 0;
+    border-left: none;
+}
+.tab-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+/* ── Color slots grid (detail panel) ─────────────────────── */
+
+.color-slots-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px 14px;
+    margin-bottom: 14px;
+}
+
+.color-slot {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.color-slot-label {
+    flex: 1;
+    font-size: 11.5px;
+    color: var(--text-2);
+    white-space: nowrap;
+}
+
+input[type="color"].color-swatch {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 32px;
+    height: 20px;
+    border: 1px solid var(--input-border);
+    border-radius: 4px;
+    padding: 2px;
+    background: none;
+    cursor: default;
+    flex-shrink: 0;
+}
+input[type="color"].color-swatch::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+input[type="color"].color-swatch::-webkit-color-swatch {
+    border: none;
+    border-radius: 2px;
+}
+input[type="color"].color-swatch:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2.5px var(--accent-soft);
+    outline: none;
+}
+input[type="color"].color-swatch:disabled {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+/* ── Color swatch grid (sidebar rows) ────────────────────── */
+
+.clr-swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 2px;
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border: 1px solid var(--aa-border);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--aa-bg);
+    padding: 3px;
+    box-sizing: border-box;
+}
+
+.clr-swatch-cell {
+    border-radius: 1px;
+}
+
+/* ── Color preview ───────────────────────────────────────── */
+
+.color-preview-content {
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.preview-slides {
+    display: flex;
+    gap: 8px;
+}
+
+.preview-slide {
+    flex: 1;
+    border-radius: 5px;
+    padding: 8px 10px;
+    min-height: 54px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    overflow: hidden;
+}
+
+.preview-slide-big {
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.1;
+}
+
+.preview-slide-text {
+    font-size: 10px;
+    opacity: 0.75;
+}
+
+.preview-accents {
+    display: flex;
+    gap: 4px;
+}
+
+.preview-accent-swatch {
+    flex: 1;
+    height: 14px;
+    border-radius: 3px;
+}
+
+.preview-links-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+}
+
+.preview-link-sample {
+    text-decoration: underline;
+    cursor: default;
+}
+
+.preview-link-sep {
+    color: var(--text-2);
 }

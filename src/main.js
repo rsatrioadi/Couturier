@@ -29,12 +29,11 @@ function showDialog({ message, confirmLabel = 'OK', showCancel = false, destruct
   });
 }
 
-const appAlert   = (msg)  => showDialog({ message: msg });
-const appConfirm = (msg)  => showDialog({ message: msg, confirmLabel: 'Delete',
-                                          showCancel: true, destructive: true });
+const appAlert   = (msg) => showDialog({ message: msg });
+const appConfirm = (msg) => showDialog({ message: msg, confirmLabel: 'Delete',
+                                         showCancel: true, destructive: true });
 
 // ── Font variant helpers ──────────────────────────────────────
-// Ordered longest-first so "Bold Italic" matches before "Bold"
 const STYLE_SUFFIXES = [
   'Bold Italic', 'Light Italic', 'Medium Italic', 'Semibold Italic', 'Black Italic',
   'Bold', 'Light', 'Medium', 'Semibold', 'Black', 'Thin', 'Italic',
@@ -66,20 +65,59 @@ function setPillsDisabled(pillsId, disabled) {
   });
 }
 
+// ── Color slot definitions ────────────────────────────────────
+const COLOR_SLOTS = [
+  { field: 'dk1',       label: 'Dark 1',       id: 'clr-dk1' },
+  { field: 'lt1',       label: 'Light 1',      id: 'clr-lt1' },
+  { field: 'dk2',       label: 'Dark 2',       id: 'clr-dk2' },
+  { field: 'lt2',       label: 'Light 2',      id: 'clr-lt2' },
+  { field: 'accent1',   label: 'Accent 1',     id: 'clr-accent1' },
+  { field: 'accent2',   label: 'Accent 2',     id: 'clr-accent2' },
+  { field: 'accent3',   label: 'Accent 3',     id: 'clr-accent3' },
+  { field: 'accent4',   label: 'Accent 4',     id: 'clr-accent4' },
+  { field: 'accent5',   label: 'Accent 5',     id: 'clr-accent5' },
+  { field: 'accent6',   label: 'Accent 6',     id: 'clr-accent6' },
+  { field: 'hlink',     label: 'Hyperlink',    id: 'clr-hlink' },
+  { field: 'fol_hlink', label: 'Followed Link',id: 'clr-fol_hlink' },
+];
+
+// Colors for a freshly-created theme (Office default palette)
+const DEFAULT_COLORS = {
+  dk1: '000000', lt1: 'FFFFFF', dk2: '44546A', lt2: 'E7E6E6',
+  accent1: '4472C4', accent2: 'ED7D31', accent3: 'A9D18E',
+  accent4: 'FFC000', accent5: '5A96C8', accent6: '70AD47',
+  hlink: '0563C1', fol_hlink: '954F72',
+};
+
 // ── Session state ────────────────────────────────────────────
-let themesRoot  = null;   // path to the Themes root folder
-let fontsFolder = null;   // = themesRoot + fuzzy("Theme Fonts")
+let themesRoot  = null;
+let fontsFolder = null;
+let colorsFolder = null;
 
 let themes        = [];
 let selectedIndex = -1;
+
+let colorThemes        = [];
+let colorSelectedIndex = -1;
 
 // ── Boot ─────────────────────────────────────────────────────
 
 async function init() {
   loadFontsAsync(); // fire and forget
 
+  // Tab switching
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const panelId = btn.dataset.panel;
+      document.querySelectorAll('.app').forEach(p => { p.hidden = (p.id !== panelId); });
+    });
+  });
+
   await resolveThemesRoot();
 
+  // Font panel listeners
   document.getElementById('addBtn').addEventListener('click', addTheme);
   document.getElementById('removeBtn').addEventListener('click', removeTheme);
   document.getElementById('selectFolderBtn').addEventListener('click', pickFolder);
@@ -90,7 +128,6 @@ async function init() {
   document.getElementById('bodyFont').addEventListener('change', bodyChanged);
   document.getElementById('bodyFont').addEventListener('blur',   bodyChanged);
 
-  // Sync pills when the user types directly into a font input
   document.getElementById('headingFont').addEventListener('input', () => {
     syncPills('headingVariants', splitFont(document.getElementById('headingFont').value).style);
   });
@@ -98,7 +135,6 @@ async function init() {
     syncPills('bodyVariants', splitFont(document.getElementById('bodyFont').value).style);
   });
 
-  // Variant pill clicks
   document.querySelectorAll('#headingVariants .variant-pill').forEach(btn => {
     btn.addEventListener('click', async () => {
       const input = document.getElementById('headingFont');
@@ -113,6 +149,22 @@ async function init() {
       input.value = buildFont(splitFont(input.value).family, btn.dataset.variant);
       syncPills('bodyVariants', btn.dataset.variant);
       await bodyChanged();
+    });
+  });
+
+  // Color panel listeners
+  document.getElementById('colorAddBtn').addEventListener('click', addColorTheme);
+  document.getElementById('colorRemoveBtn').addEventListener('click', removeColorTheme);
+  document.getElementById('colorNameField').addEventListener('change', colorNameCommitted);
+
+  COLOR_SLOTS.forEach(slot => {
+    document.getElementById(slot.id).addEventListener('change', async () => {
+      if (colorSelectedIndex < 0) return;
+      const raw = document.getElementById(slot.id).value; // '#rrggbb'
+      colorThemes[colorSelectedIndex][slot.field] = raw.slice(1).toUpperCase();
+      await saveColor();
+      updateColorPreview(colorThemes[colorSelectedIndex]);
+      refreshColorRow(colorSelectedIndex);
     });
   });
 }
@@ -130,22 +182,29 @@ async function resolveThemesRoot() {
 async function applyThemesRoot(root) {
   themesRoot = root;
 
-  // Fuzzy-resolve "Theme Fonts" under the root
-  const resolved = await invoke('resolve_theme_subfolder', {
+  const fontsResolved = await invoke('resolve_theme_subfolder', {
     themesRoot: root,
     subfolder: 'Theme Fonts',
   });
+  const colorsResolved = await invoke('resolve_theme_subfolder', {
+    themesRoot: root,
+    subfolder: 'Theme Colors',
+  });
 
-  if (!resolved) {
+  if (!fontsResolved) {
     showBanner(true, `"Theme Fonts" subfolder not found inside the selected folder.`);
     setAppEnabled(false);
     return;
   }
 
-  fontsFolder = resolved;
+  fontsFolder  = fontsResolved;
+  colorsFolder = colorsResolved || null;
   showBanner(false);
   setAppEnabled(true);
+
   await loadThemes();
+  if (colorsFolder) await loadColorThemes();
+  else setColorDetailEnabled(false);
 }
 
 async function pickFolder() {
@@ -162,17 +221,17 @@ async function pickFolder() {
 function showBanner(visible, msg) {
   const banner = document.getElementById('folderBanner');
   banner.hidden = !visible;
-  if (msg) {
-    document.querySelector('.folder-banner-msg').textContent = msg;
-  } else {
-    document.querySelector('.folder-banner-msg').textContent = 'Themes folder not found.';
-  }
+  document.querySelector('.folder-banner-msg').textContent =
+    msg || 'Themes folder not found.';
 }
 
 function setAppEnabled(on) {
-  document.querySelector('.app').style.opacity = on ? '' : '0.4';
-  document.querySelector('.app').style.pointerEvents = on ? '' : 'none';
-  document.getElementById('addBtn').disabled = !on;
+  document.querySelectorAll('.app').forEach(el => {
+    el.style.opacity       = on ? '' : '0.4';
+    el.style.pointerEvents = on ? '' : 'none';
+  });
+  document.getElementById('addBtn').disabled      = !on;
+  document.getElementById('colorAddBtn').disabled = !on;
 }
 
 async function loadFontsAsync() {
@@ -191,7 +250,7 @@ async function loadFontsAsync() {
   }
 }
 
-// ── Theme list ────────────────────────────────────────────────
+// ── Font theme list ───────────────────────────────────────────
 
 async function loadThemes() {
   themes = await invoke('load_themes', { folder: fontsFolder });
@@ -280,7 +339,7 @@ function updateSample(heading, body) {
   document.getElementById('sampleBody').style.fontFamily    = body    || 'inherit';
 }
 
-// ── Field handlers ────────────────────────────────────────────
+// ── Font field handlers ───────────────────────────────────────
 
 async function nameCommitted() {
   if (selectedIndex < 0) return;
@@ -338,7 +397,7 @@ async function save() {
   } catch (e) { console.error('Save failed:', e); }
 }
 
-// ── Add / Remove ──────────────────────────────────────────────
+// ── Font Add / Remove ─────────────────────────────────────────
 
 async function addTheme() {
   let name = 'Custom', n = 2;
@@ -384,7 +443,7 @@ async function removeTheme() {
   } catch (e) { await appAlert('Delete failed: ' + e); }
 }
 
-// ── Helpers ───────────────────────────────────────────────────
+// ── Font helpers ──────────────────────────────────────────────
 
 function refreshRow(i) {
   const list = document.getElementById('themeList');
@@ -398,6 +457,229 @@ function resort() {
   selectedIndex = themes.findIndex(t => t.file_path === fp);
   renderList();
   if (selectedIndex >= 0) select(selectedIndex);
+}
+
+// ── Color theme list ──────────────────────────────────────────
+
+async function loadColorThemes() {
+  colorThemes = await invoke('load_color_themes', { folder: colorsFolder });
+  renderColorList();
+  if (colorThemes.length > 0) selectColor(0);
+  else setColorDetailEnabled(false);
+}
+
+function renderColorList() {
+  const list  = document.getElementById('colorThemeList');
+  const empty = document.getElementById('colorEmptyState');
+  list.innerHTML = '';
+  if (colorThemes.length === 0) { list.appendChild(empty); return; }
+  colorThemes.forEach((t, i) => list.appendChild(makeColorRow(t, i)));
+}
+
+/** 8-color swatch grid showing dk2, lt2, accent1-6 */
+function makeSwatchGrid(theme) {
+  const grid = document.createElement('div');
+  grid.className = 'clr-swatch-grid';
+  const keys = ['dk2','lt2','accent1','accent2','accent3','accent4','accent5','accent6'];
+  keys.forEach(k => {
+    const cell = document.createElement('div');
+    cell.className = 'clr-swatch-cell';
+    cell.style.background = '#' + theme[k];
+    grid.appendChild(cell);
+  });
+  return grid;
+}
+
+function makeColorRow(theme, i) {
+  const row = document.createElement('div');
+  row.className = 'theme-row' + (i === colorSelectedIndex ? ' sel' : '');
+
+  const grid = makeSwatchGrid(theme);
+
+  const info = document.createElement('div');
+  info.className = 'theme-info';
+
+  const name = document.createElement('div');
+  name.className = 'theme-name';
+  name.textContent = theme.name;
+
+  // Show the 6 accent hex values as a subtitle
+  const sub = document.createElement('div');
+  sub.className = 'theme-sub';
+  sub.textContent = [theme.accent1, theme.accent2, theme.accent3].map(h => '#' + h).join('  ');
+
+  info.append(name, sub);
+  row.append(grid, info);
+  row.addEventListener('click', () => selectColor(i));
+  return row;
+}
+
+function selectColor(i) {
+  colorSelectedIndex = i;
+  renderColorList();
+  document.getElementById('colorRemoveBtn').disabled = i < 0;
+  if (i >= 0 && i < colorThemes.length) {
+    const t = colorThemes[i];
+    document.getElementById('colorNameField').value = t.name;
+    COLOR_SLOTS.forEach(slot => {
+      document.getElementById(slot.id).value = '#' + t[slot.field].toLowerCase();
+    });
+    updateColorPreview(t);
+    setColorDetailEnabled(true);
+  }
+}
+
+function setColorDetailEnabled(on) {
+  document.getElementById('colorNameField').disabled = !on;
+  COLOR_SLOTS.forEach(slot => {
+    document.getElementById(slot.id).disabled = !on;
+  });
+  if (!on) {
+    document.getElementById('colorNameField').value = '';
+    COLOR_SLOTS.forEach(slot => {
+      document.getElementById(slot.id).value = '#000000';
+    });
+    clearColorPreview();
+  }
+}
+
+function updateColorPreview(theme) {
+  if (!theme) return;
+  // Dark slide: dk1 background, lt1 heading, lt2 subtext
+  const dark = document.getElementById('prevSlideDark');
+  dark.style.background = '#' + theme.dk1;
+  document.getElementById('prevDkBig').style.color  = '#' + theme.lt1;
+  document.getElementById('prevDkText').style.color = '#' + theme.lt2;
+
+  // Light slide: lt1 background, dk1 heading, dk2 subtext
+  const light = document.getElementById('prevSlideLight');
+  light.style.background = '#' + theme.lt1;
+  document.getElementById('prevLtBig').style.color  = '#' + theme.dk1;
+  document.getElementById('prevLtText').style.color = '#' + theme.dk2;
+
+  // Accent swatches
+  const accentsEl = document.getElementById('prevAccents');
+  accentsEl.innerHTML = '';
+  ['accent1','accent2','accent3','accent4','accent5','accent6'].forEach(key => {
+    const sw = document.createElement('div');
+    sw.className = 'preview-accent-swatch';
+    sw.style.background = '#' + theme[key];
+    accentsEl.appendChild(sw);
+  });
+
+  // Links
+  document.getElementById('prevHlink').style.color    = '#' + theme.hlink;
+  document.getElementById('prevFolhlink').style.color = '#' + theme.fol_hlink;
+}
+
+function clearColorPreview() {
+  ['prevSlideDark','prevSlideLight'].forEach(id => {
+    document.getElementById(id).style.background = '';
+  });
+  ['prevDkBig','prevDkText','prevLtBig','prevLtText'].forEach(id => {
+    document.getElementById(id).style.color = '';
+  });
+  document.getElementById('prevAccents').innerHTML = '';
+  document.getElementById('prevHlink').style.color    = '';
+  document.getElementById('prevFolhlink').style.color = '';
+}
+
+// ── Color field handlers ──────────────────────────────────────
+
+async function colorNameCommitted() {
+  if (colorSelectedIndex < 0) return;
+  const newName = document.getElementById('colorNameField').value.trim();
+  if (!newName || newName === colorThemes[colorSelectedIndex].name) return;
+
+  if (colorThemes.some((t, i) => i !== colorSelectedIndex && t.name === newName)) {
+    await appAlert(`A color theme named "${newName}" already exists.`);
+    document.getElementById('colorNameField').value = colorThemes[colorSelectedIndex].name;
+    return;
+  }
+
+  const t = colorThemes[colorSelectedIndex];
+  try {
+    const newPath = await invoke('rename_color_theme', {
+      folder:  colorsFolder,
+      oldPath: t.file_path,
+      newName,
+      theme:   t,
+    });
+    colorThemes[colorSelectedIndex] = { ...t, name: newName, file_path: newPath };
+    resortColors();
+  } catch (e) { await appAlert('Rename failed: ' + e); }
+}
+
+async function saveColor() {
+  if (colorSelectedIndex < 0) return;
+  try {
+    const path = await invoke('save_color_theme', {
+      folder: colorsFolder,
+      theme:  colorThemes[colorSelectedIndex],
+    });
+    colorThemes[colorSelectedIndex].file_path = path;
+  } catch (e) { console.error('Color save failed:', e); }
+}
+
+// ── Color Add / Remove ────────────────────────────────────────
+
+async function addColorTheme() {
+  if (!colorsFolder) {
+    await appAlert('The "Theme Colors" subfolder was not found.\nPlease ensure it exists inside your Themes folder.');
+    return;
+  }
+  let name = 'Custom', n = 2;
+  while (colorThemes.some(t => t.name === name)) name = `Custom ${n++}`;
+
+  const newTheme = { name, file_path: '', ...DEFAULT_COLORS };
+
+  try {
+    const path = await invoke('save_color_theme', { folder: colorsFolder, theme: newTheme });
+    newTheme.file_path = path;
+    colorThemes.push(newTheme);
+    colorThemes.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+    colorSelectedIndex = colorThemes.findIndex(t => t.file_path === path);
+    renderColorList();
+    selectColor(colorSelectedIndex);
+    const f = document.getElementById('colorNameField');
+    f.focus(); f.select();
+  } catch (e) { await appAlert('Could not create color theme: ' + e); }
+}
+
+async function removeColorTheme() {
+  if (colorSelectedIndex < 0) return;
+  const t = colorThemes[colorSelectedIndex];
+  const confirmed = await appConfirm(`Delete "${t.name}"?\n\nThis will permanently remove the file.`);
+  if (!confirmed) return;
+
+  try {
+    await invoke('delete_theme', { filePath: t.file_path });
+    colorThemes.splice(colorSelectedIndex, 1);
+    colorSelectedIndex = Math.min(colorSelectedIndex, colorThemes.length - 1);
+    renderColorList();
+    if (colorThemes.length > 0) selectColor(colorSelectedIndex);
+    else {
+      colorSelectedIndex = -1;
+      setColorDetailEnabled(false);
+      document.getElementById('colorRemoveBtn').disabled = true;
+    }
+  } catch (e) { await appAlert('Delete failed: ' + e); }
+}
+
+// ── Color helpers ─────────────────────────────────────────────
+
+function refreshColorRow(i) {
+  const list = document.getElementById('colorThemeList');
+  const old  = list.children[i];
+  if (old) list.replaceChild(makeColorRow(colorThemes[i], i), old);
+}
+
+function resortColors() {
+  const fp = colorThemes[colorSelectedIndex]?.file_path;
+  colorThemes.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+  colorSelectedIndex = colorThemes.findIndex(t => t.file_path === fp);
+  renderColorList();
+  if (colorSelectedIndex >= 0) selectColor(colorSelectedIndex);
 }
 
 init();

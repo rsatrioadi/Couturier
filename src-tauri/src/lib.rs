@@ -22,6 +22,25 @@ pub struct FontTheme {
     pub file_path: String,
 }
 
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct ColorTheme {
+    pub name: String,
+    /// Hex strings without '#', e.g. "4472C4"
+    pub dk1: String,
+    pub lt1: String,
+    pub dk2: String,
+    pub lt2: String,
+    pub accent1: String,
+    pub accent2: String,
+    pub accent3: String,
+    pub accent4: String,
+    pub accent5: String,
+    pub accent6: String,
+    pub hlink: String,
+    pub fol_hlink: String,
+    pub file_path: String,
+}
+
 // ---------------------------------------------------------------------------
 // Config persistence
 // ---------------------------------------------------------------------------
@@ -246,6 +265,156 @@ fn make_xml(name: &str, heading: &str, body: &str) -> String {
 }
 
 // ---------------------------------------------------------------------------
+// Color XML helpers
+// ---------------------------------------------------------------------------
+
+/// Extract the hex color value from a named slot element.
+/// Handles both `<a:srgbClr val="RRGGBB"/>` and `<a:sysClr lastClr="RRGGBB" …/>`.
+fn parse_color_slot(xml: &str, slot: &str) -> String {
+    let open  = format!("<a:{}>", slot);
+    let close = format!("</a:{}>", slot);
+    let start = match xml.find(open.as_str()) {
+        Some(s) => s + open.len(),
+        None    => return "000000".to_string(),
+    };
+    let end = match xml[start..].find(close.as_str()) {
+        Some(e) => start + e,
+        None    => return "000000".to_string(),
+    };
+    let inner = &xml[start..end];
+    if inner.contains("<a:srgbClr") {
+        if let Some(v) = attr_value(inner, "val") {
+            return v.to_uppercase();
+        }
+    }
+    if inner.contains("<a:sysClr") {
+        if let Some(v) = attr_value(inner, "lastClr") {
+            return v.to_uppercase();
+        }
+    }
+    "000000".to_string()
+}
+
+fn parse_color_theme(xml: &str, file_path: &str) -> Option<ColorTheme> {
+    let scheme_start = xml.find("<a:clrScheme")?;
+    let tag_end      = xml[scheme_start..].find('>')?;
+    let scheme_tag   = &xml[scheme_start..scheme_start + tag_end + 1];
+    let name = attr_value(scheme_tag, "name")?.to_string();
+
+    Some(ColorTheme {
+        name,
+        dk1:      parse_color_slot(xml, "dk1"),
+        lt1:      parse_color_slot(xml, "lt1"),
+        dk2:      parse_color_slot(xml, "dk2"),
+        lt2:      parse_color_slot(xml, "lt2"),
+        accent1:  parse_color_slot(xml, "accent1"),
+        accent2:  parse_color_slot(xml, "accent2"),
+        accent3:  parse_color_slot(xml, "accent3"),
+        accent4:  parse_color_slot(xml, "accent4"),
+        accent5:  parse_color_slot(xml, "accent5"),
+        accent6:  parse_color_slot(xml, "accent6"),
+        hlink:    parse_color_slot(xml, "hlink"),
+        fol_hlink: parse_color_slot(xml, "folHlink"),
+        file_path: file_path.to_string(),
+    })
+}
+
+fn make_color_xml(theme: &ColorTheme) -> String {
+    let e = |s: &str| {
+        s.replace('&', "&amp;")
+            .replace('<', "&lt;")
+            .replace('>', "&gt;")
+            .replace('"', "&quot;")
+    };
+    // Store all colors as srgbClr (uppercase hex, no '#').
+    format!(
+        "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n\
+         <a:clrScheme xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" name=\"{name}\">\n\
+         \x20 <a:dk1><a:srgbClr val=\"{dk1}\"/></a:dk1>\n\
+         \x20 <a:lt1><a:srgbClr val=\"{lt1}\"/></a:lt1>\n\
+         \x20 <a:dk2><a:srgbClr val=\"{dk2}\"/></a:dk2>\n\
+         \x20 <a:lt2><a:srgbClr val=\"{lt2}\"/></a:lt2>\n\
+         \x20 <a:accent1><a:srgbClr val=\"{a1}\"/></a:accent1>\n\
+         \x20 <a:accent2><a:srgbClr val=\"{a2}\"/></a:accent2>\n\
+         \x20 <a:accent3><a:srgbClr val=\"{a3}\"/></a:accent3>\n\
+         \x20 <a:accent4><a:srgbClr val=\"{a4}\"/></a:accent4>\n\
+         \x20 <a:accent5><a:srgbClr val=\"{a5}\"/></a:accent5>\n\
+         \x20 <a:accent6><a:srgbClr val=\"{a6}\"/></a:accent6>\n\
+         \x20 <a:hlink><a:srgbClr val=\"{hl}\"/></a:hlink>\n\
+         \x20 <a:folHlink><a:srgbClr val=\"{fh}\"/></a:folHlink>\n\
+         </a:clrScheme>",
+        name = e(&theme.name),
+        dk1  = theme.dk1,  lt1 = theme.lt1,
+        dk2  = theme.dk2,  lt2 = theme.lt2,
+        a1   = theme.accent1, a2 = theme.accent2,
+        a3   = theme.accent3, a4 = theme.accent4,
+        a5   = theme.accent5, a6 = theme.accent6,
+        hl   = theme.hlink, fh  = theme.fol_hlink,
+    )
+}
+
+// ---------------------------------------------------------------------------
+// Color theme CRUD commands
+// ---------------------------------------------------------------------------
+
+#[tauri::command]
+fn load_color_themes(folder: String) -> Vec<ColorTheme> {
+    let Ok(entries) = std::fs::read_dir(&folder) else { return vec![] };
+    let mut themes: Vec<ColorTheme> = entries
+        .flatten()
+        .filter(|e| {
+            e.path()
+                .extension()
+                .and_then(|x| x.to_str())
+                .map(|x| x.eq_ignore_ascii_case("xml"))
+                .unwrap_or(false)
+        })
+        .filter_map(|e| {
+            let path = e.path();
+            let xml = std::fs::read_to_string(&path).ok()?;
+            parse_color_theme(&xml, path.to_str()?)
+        })
+        .collect();
+    themes.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
+    themes
+}
+
+#[tauri::command]
+fn save_color_theme(folder: String, theme: ColorTheme) -> Result<String, String> {
+    let dir = PathBuf::from(&folder);
+    if !dir.is_dir() {
+        return Err(format!("Folder does not exist: {}", folder));
+    }
+    let path = if theme.file_path.is_empty() {
+        dir.join(format!("{}.xml", sanitize_filename(&theme.name)))
+    } else {
+        PathBuf::from(&theme.file_path)
+    };
+    let xml = make_color_xml(&theme);
+    std::fs::write(&path, xml).map_err(|e| e.to_string())?;
+    Ok(path.to_string_lossy().into_owned())
+}
+
+#[tauri::command]
+fn rename_color_theme(
+    folder:   String,
+    old_path: String,
+    new_name: String,
+    mut theme: ColorTheme,
+) -> Result<String, String> {
+    let dir      = PathBuf::from(&folder);
+    let new_path = dir.join(format!("{}.xml", sanitize_filename(&new_name)));
+    theme.name      = new_name;
+    theme.file_path = new_path.to_string_lossy().into_owned();
+    let xml = make_color_xml(&theme);
+    std::fs::write(&new_path, xml).map_err(|e| e.to_string())?;
+    if !old_path.is_empty() && old_path != new_path.to_string_lossy() {
+        let _ = std::fs::remove_file(&old_path);
+    }
+    Ok(new_path.to_string_lossy().into_owned())
+}
+
+// ---------------------------------------------------------------------------
 // Font enumeration (ttf-parser)
 // ---------------------------------------------------------------------------
 
@@ -393,6 +562,9 @@ pub fn run() {
             save_theme,
             delete_theme,
             rename_theme,
+            load_color_themes,
+            save_color_theme,
+            rename_color_theme,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
