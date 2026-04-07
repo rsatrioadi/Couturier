@@ -1,0 +1,9 @@
+**/.*
+!.gitignore
+node_modules/
+**/src-tauri/gen/
+**/src-tauri/target/
+
+# Xcode user-specific state (not dotfiles, needs explicit rules)
+xcuserdata/
+*.xcuserstate

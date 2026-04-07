@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Couturier</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Folder-not-found banner (hidden until needed) -->
+  <div class="folder-banner" id="folderBanner" hidden>
+    <span class="folder-banner-msg">Themes folder not found.</span>
+    <button class="folder-banner-btn" id="selectFolderBtn">Select "Themes" folder…</button>
+  </div>
+
+  <div class="app">
+
+    <!-- Left sidebar -->
+    <div class="sidebar">
+      <div class="theme-list" id="themeList">
+        <div class="empty-state" id="emptyState">No themes yet.<br>Click + to add one.</div>
+      </div>
+      <div class="toolbar">
+        <button class="toolbar-btn" id="removeBtn" title="Delete theme" disabled>−</button>
+        <button class="toolbar-btn" id="addBtn"    title="New theme">+</button>
+      </div>
+    </div>
+
+    <!-- Right detail panel -->
+    <div class="detail">
+      <div class="detail-inner" id="detailInner">
+
+        <div class="name-row">
+          <label for="nameField">Name:</label>
+          <input type="text" id="nameField" placeholder="Theme name" disabled>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="headingFont">Heading font:</label>
+          <input type="text" id="headingFont" list="fontList" autocomplete="off"
+                 placeholder="e.g. Helvetica Neue" disabled>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="bodyFont">Body font:</label>
+          <input type="text" id="bodyFont" list="fontList" autocomplete="off"
+                 placeholder="e.g. Arial" disabled>
+        </div>
+
+        <div class="sample-box" id="sampleBox">
+          <div class="sample-label">Sample</div>
+          <div class="sample-content">
+            <div class="sample-heading" id="sampleHeading">Heading</div>
+            <div class="sample-body"    id="sampleBody">Body text body text body text.<br>Body text body text.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <datalist id="fontList"></datalist>
+
+  <!-- Confirmation / error dialog -->
+  <dialog id="appDialog">
+    <p id="appDialogMsg"></p>
+    <div class="dialog-actions">
+      <button id="appDialogCancel">Cancel</button>
+      <button id="appDialogOk">OK</button>
+    </div>
+  </dialog>
+
+  <script src="main.js" type="module"></script>
+</body>
+</html>
