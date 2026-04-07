@@ -25,6 +25,7 @@
     --input-border: rgba(0, 0, 0, 0.2);
     --sample-border: rgba(0, 0, 0, 0.12);
     --sample-header-bg: rgba(0, 0, 0, 0.03);
+    --dialog-border: rgba(0, 0, 0, 0.18);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -42,6 +43,7 @@
         --input-border: rgba(255, 255, 255, 0.18);
         --sample-border: rgba(255, 255, 255, 0.1);
         --sample-header-bg: rgba(255, 255, 255, 0.03);
+        --dialog-border: rgba(255, 255, 255, 0.18);
     }
 }
 
@@ -330,20 +332,33 @@ input[type="text"]:disabled {
     border: none;
     border-radius: 10px;
     padding: 20px 20px 16px;
-    min-width: 260px;
-    max-width: 340px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.28);
+    min-width: 280px;
+    max-width: 360px;
+    /* Explicit centering — WKWebView sometimes ignores UA default */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    box-shadow:
+        0 0 0 0.5px var(--dialog-border),
+        0 4px 16px rgba(0, 0, 0, 0.18),
+        0 24px 56px rgba(0, 0, 0, 0.26);
     background: var(--bg);
     color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    font-family:
+        -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
     font-size: 13px;
 }
 #appDialog::backdrop {
-    background: rgba(0,0,0,0.25);
+    background: rgba(0, 0, 0, 0);
+    backdrop-filter: brightness(0.75);
+    -webkit-backdrop-filter: brightness(0.75);
 }
 #appDialogMsg {
-    margin-bottom: 16px;
-    line-height: 1.5;
+    margin-bottom: 18px;
+    line-height: 1.55;
+    white-space: pre-line; /* respect \n in messages */
 }
 .dialog-actions {
     display: flex;
@@ -353,17 +368,56 @@ input[type="text"]:disabled {
 .dialog-actions button {
     padding: 4px 14px;
     border-radius: 5px;
-    border: 1px solid rgba(0,0,0,0.2);
+    border: 1px solid rgba(0, 0, 0, 0.2);
     background: var(--bg);
     color: var(--text);
     font-size: 13px;
     font-family: inherit;
     cursor: default;
+    min-width: 64px;
 }
-.dialog-actions button:hover { background: rgba(0,0,0,0.06); }
+.dialog-actions button:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
 .dialog-actions button.destructive {
     background: rgb(255, 59, 48);
     border-color: transparent;
     color: #fff;
 }
-.dialog-actions button.destructive:hover { background: rgb(220, 40, 30); }
+.dialog-actions button.destructive:hover {
+    background: rgb(215, 40, 30);
+}
+
+/* ── Variant pills ───────────────────────────────────────── */
+
+.variant-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 5px;
+}
+.variant-pill {
+    padding: 2px 9px;
+    border: 1px solid var(--input-border);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text-2);
+    font-size: 10.5px;
+    font-family: inherit;
+    cursor: default;
+    line-height: 1.6;
+    transition: none;
+}
+.variant-pill:hover:not(:disabled) {
+    background: var(--row-hover);
+    color: var(--text);
+}
+.variant-pill.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+.variant-pill:disabled {
+    opacity: 0.35;
+    pointer-events: none;
+}

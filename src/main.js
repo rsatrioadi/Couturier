@@ -33,6 +33,39 @@ const appAlert   = (msg)  => showDialog({ message: msg });
 const appConfirm = (msg)  => showDialog({ message: msg, confirmLabel: 'Delete',
                                           showCancel: true, destructive: true });
 
+// ── Font variant helpers ──────────────────────────────────────
+// Ordered longest-first so "Bold Italic" matches before "Bold"
+const STYLE_SUFFIXES = [
+  'Bold Italic', 'Light Italic', 'Medium Italic', 'Semibold Italic', 'Black Italic',
+  'Bold', 'Light', 'Medium', 'Semibold', 'Black', 'Thin', 'Italic',
+];
+
+function splitFont(full) {
+  const s = (full || '').trim();
+  for (const suffix of STYLE_SUFFIXES) {
+    if (s.toLowerCase().endsWith((' ' + suffix).toLowerCase())) {
+      return { family: s.slice(0, -(suffix.length + 1)).trimEnd(), style: suffix };
+    }
+  }
+  return { family: s, style: 'Regular' };
+}
+
+function buildFont(family, style) {
+  return (!style || style === 'Regular') ? family : `${family} ${style}`;
+}
+
+function syncPills(pillsId, style) {
+  document.querySelectorAll(`#${pillsId} .variant-pill`).forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.variant === style);
+  });
+}
+
+function setPillsDisabled(pillsId, disabled) {
+  document.querySelectorAll(`#${pillsId} .variant-pill`).forEach(btn => {
+    btn.disabled = disabled;
+  });
+}
+
 // ── Session state ────────────────────────────────────────────
 let themesRoot  = null;   // path to the Themes root folder
 let fontsFolder = null;   // = themesRoot + fuzzy("Theme Fonts")
@@ -56,6 +89,32 @@ async function init() {
   document.getElementById('headingFont').addEventListener('blur',   headingChanged);
   document.getElementById('bodyFont').addEventListener('change', bodyChanged);
   document.getElementById('bodyFont').addEventListener('blur',   bodyChanged);
+
+  // Sync pills when the user types directly into a font input
+  document.getElementById('headingFont').addEventListener('input', () => {
+    syncPills('headingVariants', splitFont(document.getElementById('headingFont').value).style);
+  });
+  document.getElementById('bodyFont').addEventListener('input', () => {
+    syncPills('bodyVariants', splitFont(document.getElementById('bodyFont').value).style);
+  });
+
+  // Variant pill clicks
+  document.querySelectorAll('#headingVariants .variant-pill').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const input = document.getElementById('headingFont');
+      input.value = buildFont(splitFont(input.value).family, btn.dataset.variant);
+      syncPills('headingVariants', btn.dataset.variant);
+      await headingChanged();
+    });
+  });
+  document.querySelectorAll('#bodyVariants .variant-pill').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const input = document.getElementById('bodyFont');
+      input.value = buildFont(splitFont(input.value).family, btn.dataset.variant);
+      syncPills('bodyVariants', btn.dataset.variant);
+      await bodyChanged();
+    });
+  });
 }
 
 async function resolveThemesRoot() {
@@ -155,8 +214,13 @@ function makeRow(theme, i) {
 
   const aaBox = document.createElement('div');
   aaBox.className = 'aa-box';
-  aaBox.textContent = 'Aa';
-  aaBox.style.fontFamily = theme.heading_font || 'inherit';
+  const aaUpper = document.createElement('span');
+  aaUpper.textContent = 'A';
+  aaUpper.style.fontFamily = theme.heading_font || 'inherit';
+  const aaLower = document.createElement('span');
+  aaLower.textContent = 'a';
+  aaLower.style.fontFamily = theme.body_font || 'inherit';
+  aaBox.append(aaUpper, aaLower);
 
   const info = document.createElement('div');
   info.className = 'theme-info';
@@ -188,6 +252,8 @@ function select(i) {
     document.getElementById('nameField').value   = t.name;
     document.getElementById('headingFont').value = t.heading_font;
     document.getElementById('bodyFont').value    = t.body_font;
+    syncPills('headingVariants', splitFont(t.heading_font).style);
+    syncPills('bodyVariants',    splitFont(t.body_font).style);
     updateSample(t.heading_font, t.body_font);
     setDetailEnabled(true);
   }
@@ -197,10 +263,14 @@ function setDetailEnabled(on) {
   ['nameField', 'headingFont', 'bodyFont'].forEach(id => {
     document.getElementById(id).disabled = !on;
   });
+  setPillsDisabled('headingVariants', !on);
+  setPillsDisabled('bodyVariants',    !on);
   if (!on) {
     document.getElementById('nameField').value   = '';
     document.getElementById('headingFont').value = '';
     document.getElementById('bodyFont').value    = '';
+    syncPills('headingVariants', 'Regular');
+    syncPills('bodyVariants',    'Regular');
     updateSample('', '');
   }
 }

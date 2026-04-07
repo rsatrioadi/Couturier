@@ -39,19 +39,35 @@
           <label class="field-label" for="headingFont">Heading font:</label>
           <input type="text" id="headingFont" list="fontList" autocomplete="off"
                  placeholder="e.g. Helvetica Neue" disabled>
+          <div class="variant-pills" id="headingVariants">
+            <button class="variant-pill active" data-variant="Regular"     disabled>Regular</button>
+            <button class="variant-pill"        data-variant="Italic"      disabled>Italic</button>
+            <button class="variant-pill"        data-variant="Bold"        disabled>Bold</button>
+            <button class="variant-pill"        data-variant="Bold Italic" disabled>Bold Italic</button>
+            <button class="variant-pill"        data-variant="Light"       disabled>Light</button>
+            <button class="variant-pill"        data-variant="Light Italic"disabled>Light Italic</button>
+          </div>
         </div>
 
         <div class="field-group">
           <label class="field-label" for="bodyFont">Body font:</label>
           <input type="text" id="bodyFont" list="fontList" autocomplete="off"
                  placeholder="e.g. Arial" disabled>
+          <div class="variant-pills" id="bodyVariants">
+            <button class="variant-pill active" data-variant="Regular"     disabled>Regular</button>
+            <button class="variant-pill"        data-variant="Italic"      disabled>Italic</button>
+            <button class="variant-pill"        data-variant="Bold"        disabled>Bold</button>
+            <button class="variant-pill"        data-variant="Bold Italic" disabled>Bold Italic</button>
+            <button class="variant-pill"        data-variant="Light"       disabled>Light</button>
+            <button class="variant-pill"        data-variant="Light Italic"disabled>Light Italic</button>
+          </div>
         </div>
 
         <div class="sample-box" id="sampleBox">
           <div class="sample-label">Sample</div>
           <div class="sample-content">
-            <div class="sample-heading" id="sampleHeading">Heading</div>
-            <div class="sample-body"    id="sampleBody">Body text body text body text.<br>Body text body text.</div>
+            <div class="sample-heading" id="sampleHeading">The quick brown fox</div>
+            <div class="sample-body"    id="sampleBody">Jumps over the lazy dog. Pack my box with five dozen liquor jugs.</div>
           </div>
         </div>
 
