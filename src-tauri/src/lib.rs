@@ -441,37 +441,39 @@ fn family_name_from_data(data: &[u8], face_index: u32) -> Option<String> {
 }
 
 #[tauri::command]
-fn list_fonts() -> Vec<String> {
-    let home = std::env::var("HOME").unwrap_or_default();
-    let dirs = [
-        "/System/Library/Fonts".to_string(),
-        "/System/Library/Fonts/Supplemental".to_string(),
-        "/Library/Fonts".to_string(),
-        format!("{}/Library/Fonts", home),
-    ];
-    let mut families: BTreeSet<String> = BTreeSet::new();
-    for dir in &dirs {
-        let Ok(entries) = std::fs::read_dir(dir) else { continue };
-        for entry in entries.flatten() {
-            let path = entry.path();
-            let ext = path
-                .extension()
-                .and_then(|e| e.to_str())
-                .map(|e| e.to_lowercase())
-                .unwrap_or_default();
-            if !matches!(ext.as_str(), "ttf" | "otf" | "ttc") { continue }
-            let Ok(data) = std::fs::read(&path) else { continue };
-            let count = if ext == "ttc" {
-                ttf_parser::fonts_in_collection(&data).unwrap_or(1)
-            } else { 1 };
-            for i in 0..count {
-                if let Some(name) = family_name_from_data(&data, i) {
-                    families.insert(name);
+async fn list_fonts() -> Vec<String> {
+    tauri::async_runtime::spawn_blocking(|| {
+        let home = std::env::var("HOME").unwrap_or_default();
+        let dirs = [
+            "/System/Library/Fonts".to_string(),
+            "/System/Library/Fonts/Supplemental".to_string(),
+            "/Library/Fonts".to_string(),
+            format!("{}/Library/Fonts", home),
+        ];
+        let mut families: BTreeSet<String> = BTreeSet::new();
+        for dir in &dirs {
+            let Ok(entries) = std::fs::read_dir(dir) else { continue };
+            for entry in entries.flatten() {
+                let path = entry.path();
+                let ext = path
+                    .extension()
+                    .and_then(|e| e.to_str())
+                    .map(|e| e.to_lowercase())
+                    .unwrap_or_default();
+                if !matches!(ext.as_str(), "ttf" | "otf" | "ttc") { continue }
+                let Ok(data) = std::fs::read(&path) else { continue };
+                let count = if ext == "ttc" {
+                    ttf_parser::fonts_in_collection(&data).unwrap_or(1)
+                } else { 1 };
+                for i in 0..count {
+                    if let Some(name) = family_name_from_data(&data, i) {
+                        families.insert(name);
+                    }
                 }
             }
         }
-    }
-    families.into_iter().collect()
+        families.into_iter().collect()
+    }).await.unwrap_or_default()
 }
 
 /// Directories where Microsoft Office stores its private fonts on macOS.
@@ -484,38 +486,40 @@ const OFFICE_FONT_DIRS: &[&str] = &[
 /// Returns `{family, path, index}` records for fonts in Office-private dirs.
 /// The frontend uses this for the datalist and for on-demand font loading.
 #[tauri::command]
-fn list_extra_font_faces() -> Vec<serde_json::Value> {
-    let mut out: Vec<serde_json::Value> = Vec::new();
-    let mut seen_paths: std::collections::HashSet<String> = std::collections::HashSet::new();
+async fn list_extra_font_faces() -> Vec<serde_json::Value> {
+    tauri::async_runtime::spawn_blocking(|| {
+        let mut out: Vec<serde_json::Value> = Vec::new();
+        let mut seen_paths: std::collections::HashSet<String> = std::collections::HashSet::new();
 
-    for dir in OFFICE_FONT_DIRS {
-        let Ok(entries) = std::fs::read_dir(dir) else { continue };
-        for entry in entries.flatten() {
-            let path = entry.path();
-            let ext = path.extension()
-                .and_then(|e| e.to_str())
-                .map(|e| e.to_lowercase())
-                .unwrap_or_default();
-            if !matches!(ext.as_str(), "ttf" | "otf" | "ttc") { continue }
-            let path_str = path.to_string_lossy().into_owned();
-            if !seen_paths.insert(path_str.clone()) { continue }
+        for dir in OFFICE_FONT_DIRS {
+            let Ok(entries) = std::fs::read_dir(dir) else { continue };
+            for entry in entries.flatten() {
+                let path = entry.path();
+                let ext = path.extension()
+                    .and_then(|e| e.to_str())
+                    .map(|e| e.to_lowercase())
+                    .unwrap_or_default();
+                if !matches!(ext.as_str(), "ttf" | "otf" | "ttc") { continue }
+                let path_str = path.to_string_lossy().into_owned();
+                if !seen_paths.insert(path_str.clone()) { continue }
 
-            let Ok(data) = std::fs::read(&path) else { continue };
-            let count = if ext == "ttc" {
-                ttf_parser::fonts_in_collection(&data).unwrap_or(1)
-            } else { 1 };
-            for i in 0..count {
-                if let Some(family) = family_name_from_data(&data, i) {
-                    out.push(serde_json::json!({
-                        "family": family,
-                        "path": path_str,
-                        "index": i,
-                    }));
+                let Ok(data) = std::fs::read(&path) else { continue };
+                let count = if ext == "ttc" {
+                    ttf_parser::fonts_in_collection(&data).unwrap_or(1)
+                } else { 1 };
+                for i in 0..count {
+                    if let Some(family) = family_name_from_data(&data, i) {
+                        out.push(serde_json::json!({
+                            "family": family,
+                            "path": path_str,
+                            "index": i,
+                        }));
+                    }
                 }
             }
         }
-    }
-    out
+        out
+    }).await.unwrap_or_default()
 }
 
 /// Read a font file and return its bytes as a base64 string so the frontend
