@@ -121,6 +121,9 @@ async function init() {
   document.getElementById('addBtn').addEventListener('click', addTheme);
   document.getElementById('removeBtn').addEventListener('click', removeTheme);
   document.getElementById('selectFolderBtn').addEventListener('click', pickFolder);
+  document.getElementById('revealFontsBtn').addEventListener('click', () => {
+    if (fontsFolder) invoke('reveal_folder', { path: fontsFolder });
+  });
 
   document.getElementById('nameField').addEventListener('change', nameCommitted);
   document.getElementById('headingFont').addEventListener('change', headingChanged);
@@ -155,6 +158,9 @@ async function init() {
   // Color panel listeners
   document.getElementById('colorAddBtn').addEventListener('click', addColorTheme);
   document.getElementById('colorRemoveBtn').addEventListener('click', removeColorTheme);
+  document.getElementById('revealColorsBtn').addEventListener('click', () => {
+    if (colorsFolder) invoke('reveal_folder', { path: colorsFolder });
+  });
   document.getElementById('colorNameField').addEventListener('change', colorNameCommitted);
 
   COLOR_SLOTS.forEach(slot => {

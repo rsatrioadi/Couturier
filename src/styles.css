@@ -234,6 +234,12 @@ body {
     color: var(--text-2);
 }
 
+.toolbar-btn-reveal {
+    margin-left: auto;
+    font-size: 11px;
+    width: 22px;
+}
+
 /* ── Detail panel ────────────────────────────────────────── */
 
 .detail {

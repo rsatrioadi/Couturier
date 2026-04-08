@@ -619,6 +619,12 @@ fn sanitize_filename(name: &str) -> String {
         .collect()
 }
 
+/// Open a folder in the system file manager (Finder on macOS).
+#[tauri::command]
+fn reveal_folder(path: String) {
+    let _ = std::process::Command::new("open").arg(&path).spawn();
+}
+
 // ---------------------------------------------------------------------------
 // Entry point
 // ---------------------------------------------------------------------------
@@ -641,6 +647,7 @@ pub fn run() {
             load_color_themes,
             save_color_theme,
             rename_color_theme,
+            reveal_folder,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
