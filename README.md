@@ -1,6 +1,17 @@
 # Couturier
 
+<img src="app-icon-macOS.png" width="64" alt="Couturier app icon">
+
 A small macOS utility for creating and editing Microsoft Office font and color themes. Vibe-coded using Claude.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="screenshots/fonts-dark.png">
+  <img alt="Theme Fonts" width="640" src="screenshots/fonts-light.png">
+</picture>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="screenshots/colors-dark.png">
+  <img alt="Theme Colors" width="640" src="screenshots/colors-light.png">
+</picture>
 
 ## What it does
 
