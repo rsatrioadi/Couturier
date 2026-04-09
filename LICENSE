@@ -1,0 +1,80 @@
+LLM GENERATION SUMMARY
+
+   - Primary LLM Vendor: Anthropic
+   - Primary Model Name: Claude
+   - Model Version / Date Used: claude-sonnet-4-6
+   - Additional Models: (none at the moment)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the “Software”), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+1. Attribution.
+   The above copyright notice, the LLM Generation Summary (if present),
+   and this permission notice shall be included in all copies or substantial
+   portions of the Software.
+
+2. Provenance for LLM-Assisted Modifications.
+   Any person who modifies the Software and redistributes the modified version
+   must disclose whether large language models (“LLMs”) were used to generate
+   or assist in generating such modifications. If LLMs were used, the
+   contributor shall provide a brief provenance record identifying, when known:
+
+     - LLM vendor
+     - Model name
+     - Model version or date
+
+   The provenance record may be provided in a commit message, code comment,
+   or as an addition to this license file. Provenance is informational only
+   and does not imply originality, authorship, or non-infringement.
+
+3. LLM-Generated Material Disclaimer.
+   The Software may include material generated or assisted by LLMs.
+   Contributors cannot verify and do not warrant the originality, authorship,
+   accuracy, or non-infringing nature of such material. LLM output may
+   unintentionally resemble or reproduce protected structure, sequence,
+   organization, or other expressive elements derived from training data or
+   third-party works.
+
+   Contributors expressly disclaim any responsibility or liability for any
+   intellectual property claims related to LLM-generated material.
+
+4. User Responsibility and Due Diligence.
+   Users are solely responsible for evaluating the suitability, legality,
+   and intellectual property implications of using, modifying, or distributing
+   the Software. Users must not rely on provenance information as evidence of
+   originality or freedom from third-party rights. All use is at the user’s
+   own risk.
+
+   If you discover potential copyright issues, missing attribution, or material
+   that may need removal or clarification, you are encouraged to notify the
+   maintainers or open an issue so the project can address it promptly.
+
+   The VIBE License remains fully permissive regardless of whether these checks are
+   performed.
+
+5. Responsible Review and Reporting.
+   Users and contributors are encouraged, but not required, to perform reasonable
+   checks to identify any potential reuse of copyrighted material, including the
+   use of publicly available code-similarity or plagiarism-detection tools.
+   Such checks are conducted solely at the user's discretion and do not create
+   any warranty, duty, or liability for contributors.
+
+   If a user becomes aware of possible copyright infringement, improper reuse,
+   or a need for additional attribution in the Software, the user is encouraged
+   to notify the maintainers or submit a corrective contribution. Providing such
+   notice is voluntary and does not affect the rights granted by this License.
+
+6. No Warranty.
+   THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+   FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+
+SPDX-License-Identifier: VIBE
