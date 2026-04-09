@@ -334,6 +334,8 @@ function makeRow(theme, i) {
   ]).then(() => {
     aaUpper.style.fontFamily = theme.heading_font || 'inherit';
     aaLower.style.fontFamily = theme.body_font    || 'inherit';
+    sub1.style.fontFamily    = theme.heading_font || 'inherit';
+    sub2.style.fontFamily    = theme.body_font    || 'inherit';
   });
 
   const info = document.createElement('div');

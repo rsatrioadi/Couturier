@@ -1,6 +1,6 @@
 # Couturier
 
-A small macOS utility for creating and editing Microsoft Office font and color themes. Vibe-coded by Claude.
+A small macOS utility for creating and editing Microsoft Office font and color themes. Vibe-coded using Claude.
 
 ## What it does
 
@@ -52,8 +52,30 @@ The theme files live at paths like:
 </a:fontScheme>
 ```
 
-**Color theme** (XML) — 12 color slots stored as hex values in a `<a:clrScheme>` element.
+**Color theme** (XML):
 
-## Planned
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<a:clrScheme xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" name="Nature">
+  <a:dk1><a:srgbClr val="000000"/></a:dk1>
+  <a:lt1><a:srgbClr val="FEFFFF"/></a:lt1>
+  <a:dk2><a:srgbClr val="203E79"/></a:dk2>
+  <a:lt2><a:srgbClr val="D3E5FF"/></a:lt2>
+  <a:accent1><a:srgbClr val="5E8C30"/></a:accent1>
+  <a:accent2><a:srgbClr val="3F76E3"/></a:accent2>
+  <a:accent3><a:srgbClr val="8B592B"/></a:accent3>
+  <a:accent4><a:srgbClr val="D23B3B"/></a:accent4>
+  <a:accent5><a:srgbClr val="F2D64B"/></a:accent5>
+  <a:accent6><a:srgbClr val="8F8F8F"/></a:accent6>
+  <a:hlink><a:srgbClr val="3E75E4"/></a:hlink>
+  <a:folHlink><a:srgbClr val="983EE4"/></a:folHlink>
+</a:clrScheme>
+```
+
+## In the Future, Maybe
 
 - Theme Effects editor (`Theme Effects/`)
+
+## Attribution
+
+App icon: [Europeana (@europeana) at Unsplash](https://unsplash.com/@europeana).

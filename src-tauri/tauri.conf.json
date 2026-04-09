@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "Couturier",
-  "version": "0.1.0",
-  "identifier": "com.couturier.app",
+  "version": "1.0.0",
+  "identifier": "id.rukmono.couturier",
   "build": {
     "frontendDist": "../src"
   },

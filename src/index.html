@@ -1,213 +1,463 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Couturier</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <!-- Title bar — draggable; tabs are centred inside it -->
-  <div class="titlebar" data-tauri-drag-region>
-    <div class="tab-bar">
-      <button class="tab-btn active" data-panel="fontsPanel">Fonts</button>
-      <button class="tab-btn"        data-panel="colorsPanel">Colors</button>
-    </div>
-  </div>
-
-  <!-- Folder-not-found banner (hidden until needed) -->
-  <div class="folder-banner" id="folderBanner" hidden>
-    <span class="folder-banner-msg">Themes folder not found.</span>
-    <button class="folder-banner-btn" id="selectFolderBtn">Select "Themes" folder…</button>
-  </div>
-
-  <!-- ── FONTS PANEL ──────────────────────────────────────────── -->
-  <div class="app" id="fontsPanel">
-
-    <!-- Left sidebar -->
-    <div class="sidebar">
-      <div class="theme-list" id="themeList">
-        <div class="empty-state" id="emptyState">No themes yet.<br>Click + to add one.</div>
-      </div>
-      <div class="toolbar">
-        <button class="toolbar-btn" id="removeBtn" title="Delete theme" disabled>−</button>
-        <button class="toolbar-btn" id="addBtn"    title="New theme">+</button>
-        <button class="toolbar-btn toolbar-btn-reveal" id="revealFontsBtn" title="Show Theme Fonts folder in Finder">&#128193;</button>
-      </div>
-    </div>
-
-    <!-- Right detail panel -->
-    <div class="detail">
-      <div class="detail-inner" id="detailInner">
-
-        <div class="name-row">
-          <label for="nameField">Name:</label>
-          <input type="text" id="nameField" placeholder="Theme name" disabled>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label" for="headingFont">Heading font:</label>
-          <input type="text" id="headingFont" list="fontList" autocomplete="off"
-                 placeholder="e.g. Helvetica Neue" disabled>
-          <div class="variant-pills" id="headingVariants">
-            <button class="variant-pill active" data-variant="Regular"      disabled>Regular</button>
-            <button class="variant-pill"        data-variant="Italic"       disabled>Italic</button>
-            <button class="variant-pill"        data-variant="Bold"         disabled>Bold</button>
-            <button class="variant-pill"        data-variant="Bold Italic"  disabled>Bold Italic</button>
-            <button class="variant-pill"        data-variant="Light"        disabled>Light</button>
-            <button class="variant-pill"        data-variant="Light Italic" disabled>Light Italic</button>
-          </div>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label" for="bodyFont">Body font:</label>
-          <input type="text" id="bodyFont" list="fontList" autocomplete="off"
-                 placeholder="e.g. Arial" disabled>
-          <div class="variant-pills" id="bodyVariants">
-            <button class="variant-pill active" data-variant="Regular"      disabled>Regular</button>
-            <button class="variant-pill"        data-variant="Italic"       disabled>Italic</button>
-            <button class="variant-pill"        data-variant="Bold"         disabled>Bold</button>
-            <button class="variant-pill"        data-variant="Bold Italic"  disabled>Bold Italic</button>
-            <button class="variant-pill"        data-variant="Light"        disabled>Light</button>
-            <button class="variant-pill"        data-variant="Light Italic" disabled>Light Italic</button>
-          </div>
-        </div>
-
-        <div class="sample-box" id="sampleBox">
-          <div class="sample-label">Sample</div>
-          <div class="sample-content">
-            <div class="sample-heading" id="sampleHeading">The quick brown fox</div>
-            <div class="sample-body"    id="sampleBody">Jumps over the lazy dog. Pack my box with five dozen liquor jugs.</div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-  </div><!-- /fontsPanel -->
-
-  <!-- ── COLORS PANEL ─────────────────────────────────────────── -->
-  <div class="app" id="colorsPanel" hidden>
-
-    <!-- Left sidebar -->
-    <div class="sidebar">
-      <div class="theme-list" id="colorThemeList">
-        <div class="empty-state" id="colorEmptyState">No color themes yet.<br>Click + to add one.</div>
-      </div>
-      <div class="toolbar">
-        <button class="toolbar-btn" id="colorRemoveBtn" title="Delete color theme" disabled>−</button>
-        <button class="toolbar-btn" id="colorAddBtn"    title="New color theme">+</button>
-        <button class="toolbar-btn toolbar-btn-reveal" id="revealColorsBtn" title="Show Theme Colors folder in Finder">&#128193;</button>
-      </div>
-    </div>
-
-    <!-- Right detail panel -->
-    <div class="detail">
-      <div class="detail-inner">
-
-        <div class="name-row">
-          <label for="colorNameField">Name:</label>
-          <input type="text" id="colorNameField" placeholder="Theme name" disabled>
-        </div>
-
-        <!-- 12 color slots in a 2-column grid -->
-        <div class="color-slots-grid" id="colorSlotsGrid">
-
-          <div class="color-slot">
-            <label class="color-slot-label" for="clr-dk1">Dark 1</label>
-            <input type="color" class="color-swatch" id="clr-dk1" disabled>
-          </div>
-          <div class="color-slot">
-            <label class="color-slot-label" for="clr-lt1">Light 1</label>
-            <input type="color" class="color-swatch" id="clr-lt1" disabled>
-          </div>
-
-          <div class="color-slot">
-            <label class="color-slot-label" for="clr-dk2">Dark 2</label>
-            <input type="color" class="color-swatch" id="clr-dk2" disabled>
-          </div>
-          <div class="color-slot">
-            <label class="color-slot-label" for="clr-lt2">Light 2</label>
-            <input type="color" class="color-swatch" id="clr-lt2" disabled>
-          </div>
-
-          <div class="color-slot">
-            <label class="color-slot-label" for="clr-accent1">Accent 1</label>
-            <input type="color" class="color-swatch" id="clr-accent1" disabled>
-          </div>
-          <div class="color-slot">
-            <label class="color-slot-label" for="clr-accent2">Accent 2</label>
-            <input type="color" class="color-swatch" id="clr-accent2" disabled>
-          </div>
-
-          <div class="color-slot">
-            <label class="color-slot-label" for="clr-accent3">Accent 3</label>
-            <input type="color" class="color-swatch" id="clr-accent3" disabled>
-          </div>
-          <div class="color-slot">
-            <label class="color-slot-label" for="clr-accent4">Accent 4</label>
-            <input type="color" class="color-swatch" id="clr-accent4" disabled>
-          </div>
-
-          <div class="color-slot">
-            <label class="color-slot-label" for="clr-accent5">Accent 5</label>
-            <input type="color" class="color-swatch" id="clr-accent5" disabled>
-          </div>
-          <div class="color-slot">
-            <label class="color-slot-label" for="clr-accent6">Accent 6</label>
-            <input type="color" class="color-swatch" id="clr-accent6" disabled>
-          </div>
-
-          <div class="color-slot">
-            <label class="color-slot-label" for="clr-hlink">Hyperlink</label>
-            <input type="color" class="color-swatch" id="clr-hlink" disabled>
-          </div>
-          <div class="color-slot">
-            <label class="color-slot-label" for="clr-fol_hlink">Followed Link</label>
-            <input type="color" class="color-swatch" id="clr-fol_hlink" disabled>
-          </div>
-
-        </div><!-- /color-slots-grid -->
-
-        <!-- Color preview -->
-        <div class="sample-box">
-          <div class="sample-label">Preview</div>
-          <div class="color-preview-content">
-            <div class="preview-slides">
-              <div class="preview-slide" id="prevSlideDark">
-                <div class="preview-slide-big"  id="prevDkBig">Aa</div>
-                <div class="preview-slide-text" id="prevDkText">Heading</div>
-              </div>
-              <div class="preview-slide" id="prevSlideLight">
-                <div class="preview-slide-big"  id="prevLtBig">Aa</div>
-                <div class="preview-slide-text" id="prevLtText">Body text</div>
-              </div>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Couturier</title>
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <!-- Title bar — draggable; tabs are centred inside it -->
+        <div class="titlebar" data-tauri-drag-region>
+            <div class="tab-bar">
+                <button class="tab-btn active" data-panel="fontsPanel">
+                    Fonts
+                </button>
+                <button class="tab-btn" data-panel="colorsPanel">Colors</button>
             </div>
-            <div class="preview-accents" id="prevAccents"></div>
-            <div class="preview-links-row">
-              <span class="preview-link-sample" id="prevHlink">Hyperlink</span>
-              <span class="preview-link-sep">·</span>
-              <span class="preview-link-sample preview-link-visited" id="prevFolhlink">Visited</span>
-            </div>
-          </div>
         </div>
 
-      </div>
-    </div>
+        <!-- Folder-not-found banner (hidden until needed) -->
+        <div class="folder-banner" id="folderBanner" hidden>
+            <span class="folder-banner-msg">Themes folder not found.</span>
+            <button class="folder-banner-btn" id="selectFolderBtn">
+                Select "Themes" folder…
+            </button>
+        </div>
 
-  </div><!-- /colorsPanel -->
+        <!-- ── FONTS PANEL ──────────────────────────────────────────── -->
+        <div class="app" id="fontsPanel">
+            <!-- Left sidebar -->
+            <div class="sidebar">
+                <div class="theme-list" id="themeList">
+                    <div class="empty-state" id="emptyState">
+                        No themes yet.<br />Click + to add one.
+                    </div>
+                </div>
+                <div class="toolbar">
+                    <button
+                        class="toolbar-btn"
+                        id="removeBtn"
+                        title="Delete theme"
+                        disabled
+                    >
+                        −
+                    </button>
+                    <button class="toolbar-btn" id="addBtn" title="New theme">
+                        +
+                    </button>
+                    <button
+                        class="toolbar-btn toolbar-btn-reveal"
+                        id="revealFontsBtn"
+                        title="Show Theme Fonts folder in Finder"
+                    >
+                        &#128193;
+                    </button>
+                </div>
+            </div>
 
-  <datalist id="fontList"></datalist>
+            <!-- Right detail panel -->
+            <div class="detail">
+                <div class="detail-inner" id="detailInner">
+                    <div class="name-row">
+                        <label for="nameField">Name:</label>
+                        <input
+                            type="text"
+                            id="nameField"
+                            placeholder="Theme name"
+                            disabled
+                        />
+                    </div>
 
-  <!-- Confirmation / error dialog -->
-  <dialog id="appDialog">
-    <p id="appDialogMsg"></p>
-    <div class="dialog-actions">
-      <button id="appDialogCancel">Cancel</button>
-      <button id="appDialogOk">OK</button>
-    </div>
-  </dialog>
+                    <div class="field-group">
+                        <label class="field-label" for="headingFont"
+                            >Heading font:</label
+                        >
+                        <input
+                            type="text"
+                            id="headingFont"
+                            list="fontList"
+                            autocomplete="off"
+                            placeholder="e.g. Helvetica Neue"
+                            disabled
+                        />
+                        <div class="variant-pills" id="headingVariants">
+                            <button
+                                class="variant-pill active"
+                                data-variant="Regular"
+                                disabled
+                            >
+                                Regular
+                            </button>
+                            <button
+                                class="variant-pill"
+                                data-variant="Italic"
+                                disabled
+                            >
+                                Italic
+                            </button>
+                            <button
+                                class="variant-pill"
+                                data-variant="Bold"
+                                disabled
+                            >
+                                Bold
+                            </button>
+                            <button
+                                class="variant-pill"
+                                data-variant="Bold Italic"
+                                disabled
+                            >
+                                Bold Italic
+                            </button>
+                            <button
+                                class="variant-pill"
+                                data-variant="Light"
+                                disabled
+                            >
+                                Light
+                            </button>
+                            <button
+                                class="variant-pill"
+                                data-variant="Light Italic"
+                                disabled
+                            >
+                                Light Italic
+                            </button>
+                        </div>
+                    </div>
 
-  <script src="main.js" type="module"></script>
-</body>
+                    <div class="field-group">
+                        <label class="field-label" for="bodyFont"
+                            >Body font:</label
+                        >
+                        <input
+                            type="text"
+                            id="bodyFont"
+                            list="fontList"
+                            autocomplete="off"
+                            placeholder="e.g. Arial"
+                            disabled
+                        />
+                        <div class="variant-pills" id="bodyVariants">
+                            <button
+                                class="variant-pill active"
+                                data-variant="Regular"
+                                disabled
+                            >
+                                Regular
+                            </button>
+                            <button
+                                class="variant-pill"
+                                data-variant="Italic"
+                                disabled
+                            >
+                                Italic
+                            </button>
+                            <button
+                                class="variant-pill"
+                                data-variant="Bold"
+                                disabled
+                            >
+                                Bold
+                            </button>
+                            <button
+                                class="variant-pill"
+                                data-variant="Bold Italic"
+                                disabled
+                            >
+                                Bold Italic
+                            </button>
+                            <button
+                                class="variant-pill"
+                                data-variant="Light"
+                                disabled
+                            >
+                                Light
+                            </button>
+                            <button
+                                class="variant-pill"
+                                data-variant="Light Italic"
+                                disabled
+                            >
+                                Light Italic
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="sample-box" id="sampleBox">
+                        <div class="sample-label">Sample</div>
+                        <div class="sample-content">
+                            <div class="sample-heading" id="sampleHeading">
+                                The quick brown fox
+                            </div>
+                            <div class="sample-body" id="sampleBody">
+                                Jumps over the lazy dog. Muharjo seorang
+                                xenofobia universal yang takut pada warga
+                                jazirah, contohnya Qatar. Pa's wijze lynx bezag
+                                vroom het fikse aquaduct.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /fontsPanel -->
+
+        <!-- ── COLORS PANEL ─────────────────────────────────────────── -->
+        <div class="app" id="colorsPanel" hidden>
+            <!-- Left sidebar -->
+            <div class="sidebar">
+                <div class="theme-list" id="colorThemeList">
+                    <div class="empty-state" id="colorEmptyState">
+                        No color themes yet.<br />Click + to add one.
+                    </div>
+                </div>
+                <div class="toolbar">
+                    <button
+                        class="toolbar-btn"
+                        id="colorRemoveBtn"
+                        title="Delete color theme"
+                        disabled
+                    >
+                        −
+                    </button>
+                    <button
+                        class="toolbar-btn"
+                        id="colorAddBtn"
+                        title="New color theme"
+                    >
+                        +
+                    </button>
+                    <button
+                        class="toolbar-btn toolbar-btn-reveal"
+                        id="revealColorsBtn"
+                        title="Show Theme Colors folder in Finder"
+                    >
+                        &#128193;
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right detail panel -->
+            <div class="detail">
+                <div class="detail-inner">
+                    <div class="name-row">
+                        <label for="colorNameField">Name:</label>
+                        <input
+                            type="text"
+                            id="colorNameField"
+                            placeholder="Theme name"
+                            disabled
+                        />
+                    </div>
+
+                    <!-- 12 color slots in a 2-column grid -->
+                    <div class="color-slots-grid" id="colorSlotsGrid">
+                        <div class="color-slot">
+                            <label class="color-slot-label" for="clr-dk1"
+                                >Dark 1</label
+                            >
+                            <input
+                                type="color"
+                                class="color-swatch"
+                                id="clr-dk1"
+                                disabled
+                            />
+                        </div>
+                        <div class="color-slot">
+                            <label class="color-slot-label" for="clr-lt1"
+                                >Light 1</label
+                            >
+                            <input
+                                type="color"
+                                class="color-swatch"
+                                id="clr-lt1"
+                                disabled
+                            />
+                        </div>
+
+                        <div class="color-slot">
+                            <label class="color-slot-label" for="clr-dk2"
+                                >Dark 2</label
+                            >
+                            <input
+                                type="color"
+                                class="color-swatch"
+                                id="clr-dk2"
+                                disabled
+                            />
+                        </div>
+                        <div class="color-slot">
+                            <label class="color-slot-label" for="clr-lt2"
+                                >Light 2</label
+                            >
+                            <input
+                                type="color"
+                                class="color-swatch"
+                                id="clr-lt2"
+                                disabled
+                            />
+                        </div>
+
+                        <div class="color-slot">
+                            <label class="color-slot-label" for="clr-accent1"
+                                >Accent 1</label
+                            >
+                            <input
+                                type="color"
+                                class="color-swatch"
+                                id="clr-accent1"
+                                disabled
+                            />
+                        </div>
+                        <div class="color-slot">
+                            <label class="color-slot-label" for="clr-accent2"
+                                >Accent 2</label
+                            >
+                            <input
+                                type="color"
+                                class="color-swatch"
+                                id="clr-accent2"
+                                disabled
+                            />
+                        </div>
+
+                        <div class="color-slot">
+                            <label class="color-slot-label" for="clr-accent3"
+                                >Accent 3</label
+                            >
+                            <input
+                                type="color"
+                                class="color-swatch"
+                                id="clr-accent3"
+                                disabled
+                            />
+                        </div>
+                        <div class="color-slot">
+                            <label class="color-slot-label" for="clr-accent4"
+                                >Accent 4</label
+                            >
+                            <input
+                                type="color"
+                                class="color-swatch"
+                                id="clr-accent4"
+                                disabled
+                            />
+                        </div>
+
+                        <div class="color-slot">
+                            <label class="color-slot-label" for="clr-accent5"
+                                >Accent 5</label
+                            >
+                            <input
+                                type="color"
+                                class="color-swatch"
+                                id="clr-accent5"
+                                disabled
+                            />
+                        </div>
+                        <div class="color-slot">
+                            <label class="color-slot-label" for="clr-accent6"
+                                >Accent 6</label
+                            >
+                            <input
+                                type="color"
+                                class="color-swatch"
+                                id="clr-accent6"
+                                disabled
+                            />
+                        </div>
+
+                        <div class="color-slot">
+                            <label class="color-slot-label" for="clr-hlink"
+                                >Hyperlink</label
+                            >
+                            <input
+                                type="color"
+                                class="color-swatch"
+                                id="clr-hlink"
+                                disabled
+                            />
+                        </div>
+                        <div class="color-slot">
+                            <label class="color-slot-label" for="clr-fol_hlink"
+                                >Followed Link</label
+                            >
+                            <input
+                                type="color"
+                                class="color-swatch"
+                                id="clr-fol_hlink"
+                                disabled
+                            />
+                        </div>
+                    </div>
+                    <!-- /color-slots-grid -->
+
+                    <!-- Color preview -->
+                    <div class="sample-box">
+                        <div class="sample-label">Preview</div>
+                        <div class="color-preview-content">
+                            <div class="preview-slides">
+                                <div class="preview-slide" id="prevSlideDark">
+                                    <div
+                                        class="preview-slide-big"
+                                        id="prevDkBig"
+                                    >
+                                        Aa
+                                    </div>
+                                    <div
+                                        class="preview-slide-text"
+                                        id="prevDkText"
+                                    >
+                                        Heading
+                                    </div>
+                                </div>
+                                <div class="preview-slide" id="prevSlideLight">
+                                    <div
+                                        class="preview-slide-big"
+                                        id="prevLtBig"
+                                    >
+                                        Aa
+                                    </div>
+                                    <div
+                                        class="preview-slide-text"
+                                        id="prevLtText"
+                                    >
+                                        Body text
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="preview-accents" id="prevAccents"></div>
+                            <div class="preview-links-row">
+                                <span class="preview-link-sample" id="prevHlink"
+                                    >Hyperlink</span
+                                >
+                                <span class="preview-link-sep">·</span>
+                                <span
+                                    class="preview-link-sample preview-link-visited"
+                                    id="prevFolhlink"
+                                    >Visited</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /colorsPanel -->
+
+        <datalist id="fontList"></datalist>
+
+        <!-- Confirmation / error dialog -->
+        <dialog id="appDialog">
+            <p id="appDialogMsg"></p>
+            <div class="dialog-actions">
+                <button id="appDialogCancel">Cancel</button>
+                <button id="appDialogOk">OK</button>
+            </div>
+        </dialog>
+
+        <script src="main.js" type="module"></script>
+    </body>
 </html>
